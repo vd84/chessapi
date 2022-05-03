@@ -1,5 +1,6 @@
 import { WebSocketServer } from 'ws';
 import express from 'express';
+import cors from 'cors'
 
 function createUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -10,14 +11,21 @@ function createUUID() {
 
 const app = express();
 
+app.use(cors())
+
 const port = 3001;
 
 const sessions = []
 
 app.get('/getSession', (req, res) => {
-    const newSession = {sessionId: createUUID(), socketPlayer1: null, socketPlayer2: null}
-    sessions.push(newSession)
-    res.send(newSession);
+    if(sessions.length === 0) {
+        const newSession = {sessionId: createUUID(), socketPlayer1: null, socketPlayer2: null}
+        sessions.push(newSession)
+        res.send(newSession);
+        return
+    }
+    const existingSession = sessions[0]
+    res.send(existingSession);
 });
 
 app.listen(port, () => console.log(`Chat session app ${port}!`))
