@@ -51,8 +51,10 @@ wss.on('connection', function connection(ws) {
                 break
             case "move":
                 const move = data.toString().split(" ")[2]
-                session.socketPlayer1.send(move)
-                session.socketPlayer2.send(move)
+                if(session.socketPlayer1)
+                    session.socketPlayer1.send(move)
+                if(session.socketPlayer2)
+                    session.socketPlayer2.send(move)
             }
     });
 });
